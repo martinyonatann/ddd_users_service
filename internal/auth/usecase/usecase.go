@@ -4,10 +4,10 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/koinworks/asgard-heimdal/libs/logger"
 	"github.com/martinyonathann/users-service/config"
 	"github.com/martinyonathann/users-service/internal/auth"
 	"github.com/martinyonathann/users-service/internal/models"
+	"github.com/martinyonathann/users-service/pkg/logger"
 	"github.com/martinyonathann/users-service/pkg/utils"
 )
 

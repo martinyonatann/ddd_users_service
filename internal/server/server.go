@@ -10,9 +10,10 @@ import (
 
 	"github.com/go-redis/redis/v8"
 	"github.com/jmoiron/sqlx"
-	"github.com/koinworks/asgard-heimdal/libs/logger"
 	"github.com/labstack/echo/v4"
 	"github.com/martinyonathann/users-service/config"
+	"github.com/martinyonathann/users-service/pkg/logger"
+	"github.com/minio/minio-go/v7"
 )
 
 const (
@@ -27,11 +28,12 @@ type Server struct {
 	cfg         *config.Config
 	db          *sqlx.DB
 	redisClient *redis.Client
+	awsClient   *minio.Client
 	logger      logger.Logger
 }
 
-func NewServer(cfg *config.Config, db *sqlx.DB, redisClient *redis.Client, logger logger.Logger) *Server {
-	return &Server{echo: echo.New(), cfg: cfg, db: db, redisClient: redisClient, logger: logger}
+func NewServer(cfg *config.Config, db *sqlx.DB, redisClient *redis.Client, awsClient *minio.Client, logger logger.Logger) *Server {
+	return &Server{echo: echo.New(), cfg: cfg, db: db, redisClient: redisClient, awsClient: awsClient, logger: logger}
 }
 
 func (s *Server) Run() error {
@@ -47,14 +49,14 @@ func (s *Server) Run() error {
 	go func() {
 		s.logger.Infof("Server is listening on PORT: %s", s.cfg.Server.Port)
 		if err := s.echo.StartServer(server); err != nil {
-			s.logger.Panic("Error starting Server: " + err.Error())
+			s.logger.Fatalf("Error starting Server: " + err.Error())
 		}
 	}()
 
 	go func() {
 		s.logger.Infof("Starting Debug Server on PORT: %s", s.cfg.Server.PprofPort)
 		if err := http.ListenAndServe(s.cfg.Server.PprofPort, http.DefaultServeMux); err != nil {
-			s.logger.Errf("Error PPROF ListenAndServe: %s", err)
+			s.logger.Errorf("Error PPROF ListenAndServe: %s", err)
 		}
 	}()
 

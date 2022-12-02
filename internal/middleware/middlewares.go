@@ -1,10 +1,10 @@
 package middleware
 
 import (
-	"github.com/koinworks/asgard-heimdal/libs/logger"
 	"github.com/martinyonathann/users-service/config"
 	"github.com/martinyonathann/users-service/internal/auth"
 	"github.com/martinyonathann/users-service/internal/session"
+	"github.com/martinyonathann/users-service/pkg/logger"
 )
 
 type MiddlewareManager struct {
